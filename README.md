@@ -169,7 +169,8 @@ The command maps the filesystem paths as follows:
 
 ```bash
 # Maps the local folder to the container's output directory
-docker run --rm -v $(pwd)/playwright-report:/app/playwright-report ...
+# Example:
+docker run --rm -v "$(pwd)/playwright-report:/app/playwright-report" my-playwright-image /bin/bash
 ```
 
 ## Result: 
@@ -179,7 +180,8 @@ The HTML report survives the `container` teardown, allowing for local analysis.
 
 ```bash
 # Overwrites the container's /src with the local /src
-docker run -it --rm -v $(pwd)/src:/app/src ...
+# Example:
+docker run --rm -it --ipc=host -v "$(pwd)/src:/app/src" my-playwright-image /bin/bash
 ```
 
 ## Result: 

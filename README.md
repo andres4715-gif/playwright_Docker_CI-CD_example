@@ -150,3 +150,37 @@ Open it locally:
 ```bash
 npx playwright show-report
 ```
+___
+# 🐳 Docker Volumes & Bind Mounts Strategy
+By design, Docker containers are ephemeral and stateless. When a container is stopped and removed (especially when using the `--rm` flag), its internal writable layer is destroyed, and all data generated during runtime is lost.
+
+To overcome this, we utilize Bind Mounts via the `-v` flag. This creates a direct mapping between a directory on the Host OS and a directory inside the `Container`.
+
+## Syntax Breakdown
+The command maps the filesystem paths as follows:
+
+```bash
+-v "<HOST_PATH>:<CONTAINER_PATH>"
+```
+
+
+## Use Cases in this Project
+1. Artifact Persistence (Reporting) Since the container is destroyed immediately after test execution, internal reports are lost. By mounting the report directory, we bypass the container's ephemeral file system and write directly to the host.
+
+```bash
+# Maps the local folder to the container's output directory
+docker run --rm -v $(pwd)/playwright-report:/app/playwright-report ...
+```
+
+## Result: 
+The HTML report survives the `container` teardown, allowing for local analysis.
+
+2. Configuration Injection & Hot-Reloading (Debugging) During development/debugging, rebuilding the image for every code change is inefficient. We use bind mounts to inject local source code into the running container.
+
+```bash
+# Overwrites the container's /src with the local /src
+docker run -it --rm -v $(pwd)/src:/app/src ...
+```
+
+## Result: 
+Changes made in the local IDE are immediately reflected inside the `container`, enabling a rapid "edit-run-debug" loop without image rebuilding.

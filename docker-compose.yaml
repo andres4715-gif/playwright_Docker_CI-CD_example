@@ -1,0 +1,30 @@
+services:
+  # Service name (arbitrary)
+  playwright-tests:
+    # Build the image using the Dockerfile in the current directory (.)
+    build: .
+    
+    # Tag the image for easy identification
+    image: my-playwright-image
+    
+    # Explicit container name (avoids random generated names)
+    container_name: playwright-runner
+    
+    # CRITICAL FOR PLAYWRIGHT: Prevents browser crashes due to shared memory limits
+    ipc: host 
+    
+    # VOLUMES (Bind mounts strategies)
+    volumes:
+      # 1. Map local folder to persist and access the HTML report on the host
+      - ./playwright-report:/app/playwright-report
+      # 2. Inject local source code for hot-reloading (develop without rebuilding)
+      - ./src:/app/src
+      # 3. Prevent local node_modules from overwriting container's node_modules
+      - /app/node_modules
+
+    # Default command to execute on start
+    command: npx playwright test
+
+    # (Optional) Environment variables
+    environment:
+      - CI=true

@@ -1,0 +1,54 @@
+name: label author
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  label-author:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    
+    steps:
+      - name: assign label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const actor = context.actor;
+            
+            const labelName = `Dev: ${actor}`;
+            
+            const colors = ['1d76db', '0e8a16', 'b60205', 'fbca04', 'd93f0b'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: labelName
+              });
+              console.log(`Label ${labelName} already exists.`);
+            } catch (error) {
+              // 3. if not (error 404), we create the label
+              if (error.status === 404) {
+                console.log(`Creating label: ${labelName}`);
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: labelName,
+                  color: randomColor,
+                  description: `Commits by: ${actor}`
+                });
+              }
+            }
+
+            // 4. Apply the label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [labelName]
+            });

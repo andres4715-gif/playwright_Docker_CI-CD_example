@@ -1,0 +1,41 @@
+name: publish Docker image into GitHub
+
+on:
+  push:
+    branches: [ "master" ]
+
+# env configuration
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }} 
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write 
+
+    steps:
+      - name: pull code
+        uses: actions/checkout@v4
+
+      - name: Login into GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Usamos el token automático de GitHub
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and publish image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # Here you will see the image.
+          # 1. 'latest': for latest version
+          # 2. 'sha': for history
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}

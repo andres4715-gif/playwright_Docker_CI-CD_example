@@ -189,3 +189,8 @@ Changes made in the local IDE are immediately reflected inside the `container`, 
 
 
 👷🏻‍♂️ Demo Playwright Framework 🚀
+
+
+## **TODO** 
+- [ ]  Add some pods like a jobs
+- [ ]  Add the whole list of manifest within ./manifest folder

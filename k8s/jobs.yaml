@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-playwright-01
+spec:
+  template:
+    spec:
+      containers:
+      - name: mi-playwright-container1
+        image: playwright:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: config-app-vi
+        command: ["npx", "playwright", "test"] 
+      restartPolicy: Never
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-playwright-02
+spec:
+  template:
+    spec:
+      containers:
+      - name: mi-playwright-container2
+        image: playwright:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: config-app-vi
+        # Puedes cambiar este comando para correr otro set de pruebas
+        command: ["npx", "playwright", "test"] 
+      restartPolicy: Never
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-playwright-03
+spec:
+  template:
+    spec:
+      containers:
+      - name: mi-playwright-container3
+        image: playwright:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: config-app-vi
+        command: ["npx", "playwright", "test"] 
+      restartPolicy: Never

@@ -1,0 +1,68 @@
+name: Playwright K8s Jobs
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  k8s-test-execution:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Download Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Install Minikube in GitHub
+      - name: Setup Minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          driver: docker
+          
+      # 3. Build the image within Minikube
+      # This command replace 'eval $(minikube docker-env)' local
+      - name: Build Docker Image in Minikube
+        run: |
+          eval $(minikube -p minikube docker-env)
+          docker build -t playwright:latest .
+          echo "Image builded successful within the minikube cluster in github"
+
+      # 4. Make ConfigMap (Important)
+      - name: Create ConfigMap
+        run: |
+          cat <<EOF > config-map.yaml
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: config-app-vi
+          data:
+            color_fondo: "azul"
+            nivel_log: "debug"
+            database_host: "192.168.1.50"
+          EOF
+          
+          kubectl apply -f config-map.yaml
+
+      # 5. Launch Jobs
+      - name: Apply Jobs
+        run: kubectl apply -f k8s/jobs.yaml
+
+      # 6. Wait for results (IMPORTANT)
+      # GitHub doesn’t know it’s an async job. We have to make it wait.
+      - name: Wait for Jobs to Complete
+        run: |
+          echo "...Waiting while the jobs finish..."
+          kubectl wait --for=condition=complete --timeout=300s job/job-playwright-01
+          kubectl wait --for=condition=complete --timeout=300s job/job-playwright-02
+          kubectl wait --for=condition=complete --timeout=300s job/job-playwright-03
+
+      # 7. Verify Logs if everything is ok (Optional, for registry)
+      - name: Print Logs
+        if: always()
+        run: |
+          echo "Logs of the Job 1:"
+          kubectl logs -l job-name=job-playwright-01 --tail=-1
+          echo "--------------------------------"
+          echo "Logs del Job 2:"
+          kubectl logs -l job-name=job-playwright-02 --tail=-1

@@ -1,4 +1,9 @@
-# Playwright Docker Automation
+# Playwright Docker and Kubernetes Automation Demo Framework
+
+## Clone the Github public Repository:
+```text
+git clone https://github.com/andres4715-gif/playwright_Docker_CI-CD_example.git
+```
 
 A robust, containerized end-to-end testing framework using Playwright, TypeScript, and Docker.
 

@@ -1,0 +1,73 @@
+name: Pull Request Info
+on:
+  pull_request:
+    types: [opened, synchronize] # Runs when PR is opened or updated
+
+jobs:
+  add-info:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Permission to comment and label
+      issues: write        # Permission to manage labels
+    
+    steps:
+      - name: Label Branch and Comment Commits
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // 1. GET DATA
+            // 'head.ref' is the source branch name
+            const branchName = context.payload.pull_request.head.ref;
+            // 'commits' is the total number of commits in this PR
+            const commitCount = context.payload.pull_request.commits;
+            
+            // ---------------------------------------------------
+            // PART A: LABEL WITH BRANCH NAME
+            // ---------------------------------------------------
+            const branchLabel = `Branch: ${branchName}`;
+            
+            // Check if label exists, if not, create it
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: branchLabel
+              });
+            } catch (e) {
+              if (e.status === 404) {
+                console.log(`Creating label for branch: ${branchLabel}`);
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: branchLabel,
+                  color: 'bfdadc' // A grey/light blue color
+                });
+              }
+            }
+
+            // Add the label to the PR
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [branchLabel]
+            });
+
+            // ---------------------------------------------------
+            // PART B: COMMENT COMMIT COUNT
+            // ---------------------------------------------------
+            const commentBody = `👋 Hello!
+            
+            I am analyzing your Pull Request:
+            - 🌿 Source branch: **${branchName}**
+            - 📦 This PR currently contains **${commitCount}** commit(s).
+            
+            *Happy coding!* 🚀`;
+
+            // Create the comment on the PR
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody
+            });

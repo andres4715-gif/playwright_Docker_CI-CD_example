@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright Tests in Docker Container
 
 on:
   push:

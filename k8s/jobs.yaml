@@ -31,7 +31,7 @@ spec:
         envFrom:
         - configMapRef:
             name: config-app-vi
-        # Puedes cambiar este comando para correr otro set de pruebas
+        # You can change this command line to run another test set
         command: ["npx", "playwright", "test"] 
       restartPolicy: Never
 

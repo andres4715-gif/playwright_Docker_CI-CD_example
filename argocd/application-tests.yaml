@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mis-tests-playwright
+  name: my-demo-playwright-test
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: 'https://github.com/andres4715-gif/playwright_Docker_CI-CD_example.git'
     targetRevision: HEAD
-    path: ./manifest
+    path: ./k8s
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default

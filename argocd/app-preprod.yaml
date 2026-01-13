@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-demo-playwright-test
+  name: playwright-preprod
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: 'https://github.com/andres4715-gif/playwright_Docker_CI-CD_example.git'
     targetRevision: HEAD
-    path: ./k8s
+    path: ./k8s/overlays/preprod
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
-  # Magic synchronisation 
+    namespace: preprod
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

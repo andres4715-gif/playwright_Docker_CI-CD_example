@@ -30,23 +30,18 @@ jobs:
 
       # 4. Make ConfigMap (Important)
       - name: Create ConfigMap
-        run: |
-          cat <<EOF > config-map.yaml
-          apiVersion: v1
-          kind: ConfigMap
-          metadata:
-            name: config-app-vi
-          data:
-            color_fondo: "azul"
-            nivel_log: "debug"
-            database_host: "192.168.1.50"
-          EOF
-          
-          kubectl apply -f config-map.yaml
+        run: kubectl apply -f k8s/base/config-app-vi.yaml
 
       # 5. Launch Jobs
       - name: Apply Jobs
-        run: kubectl apply -f k8s/jobs.yaml
+        run: |
+          # 1. Timing: Force to use local image (Never) instead of downloading it (Always)
+          # This is necessary because in 'base/jobs.yaml' we put 'Always' for ArgoCD,
+          # but here in CI we need to use the image that we built in step 3.
+          sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' k8s/base/jobs.yaml
+          
+          # 2. Apply the file from NEW path (inside base)
+          kubectl apply -f k8s/base/jobs.yaml
 
       # 6. Wait for results (IMPORTANT)
       # GitHub doesn’t know it’s an async job. We have to make it wait.

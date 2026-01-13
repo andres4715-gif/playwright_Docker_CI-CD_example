@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namespace: qa
+
+nameSuffix: -qa
+
+commonLabels:
+  environment: qa
+
+images:
+  - name: playwright:latest
+    newName: ghcr.io/andres4715-gif/playwright_docker_ci-cd_example
+    newTag: v1.0-beta
+
+configMapGenerator:
+  - name: config-app-vi
+    behavior: merge
+    literals:
+      - database_host="192.168.1.50"
+      - nivel_log="debug"

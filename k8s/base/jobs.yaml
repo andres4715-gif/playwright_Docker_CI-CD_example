@@ -2,13 +2,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-playwright-01
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   template:
     spec:
       containers:
       - name: mi-playwright-container1
         image: playwright:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: config-app-vi
@@ -21,13 +24,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-playwright-02
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   template:
     spec:
       containers:
       - name: mi-playwright-container2
         image: playwright:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: config-app-vi
@@ -41,13 +47,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-playwright-03
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   template:
     spec:
       containers:
       - name: mi-playwright-container3
         image: playwright:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: config-app-vi

@@ -1,0 +1,10 @@
+image:
+  repository: mcr.microsoft.com/playwright
+  tag: v1.57.0-jammy
+  pullPolicy: IfNotPresent
+
+command: "npx playwright test"
+
+config:
+  color_fondo: "azul"
+  nivel_log: "info"

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  color_fondo: {{ .Values.config.color_fondo }}
+  nivel_log: {{ .Values.config.nivel_log }}

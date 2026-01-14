@@ -3,12 +3,12 @@ entries:
   playwright-chart:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-14T02:17:26.409387404Z"
+    created: "2026-01-14T03:32:47.447130243Z"
     description: A Helm chart for Kubernetes
-    digest: 4759d8c5c0ca7e8a42d96de840a1b61fc18458a664eff7ed410b5f9f2d739dae
+    digest: d535c875baa8238dc7fed5e4e76f1679e1a72ee8b0eb1893554697221bce880b
     name: playwright-chart
     type: application
     urls:
     - charts/playwright-chart-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-14T02:17:26.409208864Z"
+generated: "2026-01-14T03:32:47.44690757Z"

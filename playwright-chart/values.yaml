@@ -1,7 +1,7 @@
 image:
-  repository: mcr.microsoft.com/playwright
-  tag: v1.57.0-jammy
-  pullPolicy: IfNotPresent
+  repository: ghcr.io/andres4715-gif/playwright_docker_ci-cd_example
+  tag: latest
+  pullPolicy: Always
 
 command: "npx playwright test"
 

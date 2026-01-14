@@ -197,5 +197,6 @@ Changes made in the local IDE are immediately reflected inside the `container`, 
 
 
 ## **TODO** 
-- [ ]  Add some pods like a jobs
-- [ ]  Add the whole list of manifest within ./manifest folder
+- [X]  Add some pods like a jobs
+- [X]  Add the whole list of manifest within ./manifest folder
+- [ ]  Create pods using a Deployment, check in notion some steps: 

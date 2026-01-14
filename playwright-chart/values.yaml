@@ -1,7 +1,15 @@
+# Just for this example was necessary to work using local image because the images created in github build via workflow has amd architecture 
+# therefore was necessary to use the minikube local image: using this command line:
+# In the root path where is the docker file just add this command line: 
+# minikube image build -t ghcr.io/andres4715-gif/playwright_docker_ci-cd_example:latest .
+# another change to apply once you need to add the docker image directly in local minikube is this change: 
+# pullPolicy: Never 
+# This command prevent go to the container in the github repository in this case we are working on the local minikube image
+
 image:
   repository: ghcr.io/andres4715-gif/playwright_docker_ci-cd_example
   tag: latest
-  pullPolicy: Always
+  pullPolicy: Never
 
 command: "npx playwright test"
 

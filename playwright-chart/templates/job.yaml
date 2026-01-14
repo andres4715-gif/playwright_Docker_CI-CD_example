@@ -4,6 +4,8 @@ metadata:
   # Release name to be unique
   name: {{ .Release.Name }}-job
 spec:
+  ttlSecondsAfterFinished: 60 # Remove created pod after 60 seconds
+spec:
   template:
     spec:
       containers:

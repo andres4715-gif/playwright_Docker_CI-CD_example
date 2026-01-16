@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     permissions:
-      contents: read
+      contents: write
       packages: write 
 
     steps:
@@ -36,7 +36,7 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             # if the event is push in the master branch, add 'latest'
-            type=raw,value=latest,enable=${{ github.ref == 'format:refs/heads/master' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             # Use the sha of the commit (for the history)
             type=sha
             # if the pull request is a PR, use the PR number (ej: pr-2)
@@ -52,3 +52,28 @@ jobs:
           # 3. Use the output of the `meta` step as inputs
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update helm chart with a new image
+        # Just run it if we are in  master/main, not in Pull Requests
+        if: github.ref == 'refs/heads/master'
+        run: |
+          # 1. Install yq editor of command line
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          
+          # 2. Github bot configuration
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 3. Define the exact TAG (the short SHA that use docker metadata)
+          NEW_TAG="sha-$(git rev-parse --short HEAD)"
+          echo "Updating values.yaml using tag: $NEW_TAG"
+          
+          # 4. Edit file values.yaml (magic)
+          # This search .image.tag and it change it without broke the format
+          yq -i ".image.tag = \"$NEW_TAG\"" playwright-chart/values.yaml
+          
+          # 5. setup and push changes
+          # Note(Important): "[skip ci]" in vital for this commit does not launch the workflow again (avoid infinity loop)
+          git add playwright-chart/values.yaml
+          git commit -m "chore(helm): update image tag to $NEW_TAG [skip ci]"
+          git push

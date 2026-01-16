@@ -58,7 +58,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           # 1. Install yq editor of command line
-          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
           
           # 2. Github bot configuration
           git config user.name "github-actions[bot]"

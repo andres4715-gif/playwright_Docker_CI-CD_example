@@ -41,6 +41,14 @@ test.describe('Authentication', () => {
         await expect(page).toHaveURL(/.*inventory/);
     });
 
+    test('should log in successfully with valid credentials copy_4', async ({ page }) => {
+        // Perform actions using the POM
+        await loginPage.login('standard_user', 'secret_sauce');
+
+        // Assertion: Check URL or a specific element on the dashboard
+        await expect(page).toHaveURL(/.*inventory/);
+    });
+
     test('should show an error with invalid credentials', async () => {
         await loginPage.login('invalid_user', 'wrong_pass');
 

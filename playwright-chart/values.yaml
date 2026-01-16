@@ -8,11 +8,9 @@
 
 image:
   repository: ghcr.io/andres4715-gif/playwright_docker_ci-cd_example
-  tag: latest
+  tag: sha-aa3fc01
   pullPolicy: IfNotPresent
-
 command: "npx playwright test"
-
 config:
   color_fondo: "azul"
   nivel_log: "info"

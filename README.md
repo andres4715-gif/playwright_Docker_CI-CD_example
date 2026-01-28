@@ -193,7 +193,7 @@ docker run --rm -it --ipc=host -v "$(pwd)/src:/app/src" my-playwright-image /bin
 Changes made in the local IDE are immediately reflected inside the `container`, enabling a rapid "edit-run-debug" loop without image rebuilding.
 
 
-👷🏻‍♂️ Demo Playwright Framework 🚀
+👷🏻‍♂️ Demo Playwright Framework 🚀👏
 
 
 ## **TODO** 

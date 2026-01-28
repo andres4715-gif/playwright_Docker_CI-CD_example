@@ -8,7 +8,7 @@
 
 image:
   repository: ghcr.io/andres4715-gif/playwright_docker_ci-cd_example
-  tag: sha-aa3fc01
+  tag: sha-e2f4e27
   pullPolicy: IfNotPresent
 command: "npx playwright test"
 config:
